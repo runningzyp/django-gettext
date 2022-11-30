@@ -1,0 +1,25 @@
+{
+  "name": "django-gettext",
+  "displayName": "django.po",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "django.po",
+      "aliases": ["Django Gettext", "django.po"],
+      "extensions": [".po"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "django.po",
+      "scopeName": "django.po",
+      "path": "./syntaxes/django.po.tmLanguage.json"
+    }]
+  }
+}
