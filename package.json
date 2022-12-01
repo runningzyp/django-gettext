@@ -1,8 +1,8 @@
 {
     "name": "django-gettext",
     "displayName": "django.po",
-    "description": "",
-    "version": "0.0.2",
+    "description": "language support for django gettext",
+    "version": "0.0.4",
     "engines": {
         "vscode": "^1.73.0"
     },
@@ -21,7 +21,11 @@
                 "extensions": [
                     ".po"
                 ],
-                "configuration": "./language-configuration.json"
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./images/icon.svg",
+                    "dark":"./images/icon.svg"
+                  }
             }
         ],
         "grammars": [
