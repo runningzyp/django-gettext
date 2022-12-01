@@ -1,4 +1,5 @@
 {
+    "scopeName": "django.po",
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Django Gettext",
 	"patterns": [
@@ -7,15 +8,44 @@
 		},
 		{
 			"include": "#strings"
-		}
+		},
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#markups"
+        },
+        {
+            "include": "#invalids"
+        }
 	],
 	"repository": {
+        "invalids":{
+            "patterns": [
+                {
+                    "name": "invalid.illegal.unterminated-string.django.po",
+                    "match":"\\b(fuzzy)\\b"
+                }
+            ]
+        },
+        "markups":{
+            "patterns":[{
+                "name":"markup.underline.link.django.po",
+                "match":"^(#:).*$"
+            }]
+        },
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.django.po",
-				"match": "\\b(if|while|for|return)\\b"
+				"match": "\\b(msgid|msgstr)\\b"
 			}]
 		},
+        "comments":{
+            "patterns": [{
+				"name": "comment.django.po",
+                "match": "^#(?![:|,]).*$"
+            }]
+        },
 		"strings": {
 			"name": "string.quoted.double.django.po",
 			"begin": "\"",
@@ -27,6 +57,5 @@
 				}
 			]
 		}
-	},
-	"scopeName": "django.po"
+	}
 }

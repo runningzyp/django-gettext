@@ -20,7 +20,10 @@
     "grammars": [{
       "language": "django.po",
       "scopeName": "django.po",
-      "path": "./syntaxes/django.po.tmLanguage.json"
+      "path": "./syntaxes/django.po.tmLanguage.json",
+      "embeddedLanguages": {
+        "string.quoted.double.django.po": "python"
+      }
     }]
   },
   "publisher":"xiangcai",
