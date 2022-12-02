@@ -17,6 +17,8 @@ disposable = vscode.commands.registerCommand('makemessages', () => {
     vscode.window.showInformationMessage('Django makemessages!');
 });
 
+let log = vscode.window.createOutputChannel("Django Gettext");
+
 hoverProvider = vscode.languages.registerHoverProvider('django.po', {
     provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
         let word = document.getText(document.getWordRangeAtPosition(position));
@@ -80,6 +82,8 @@ defineProvider = vscode.languages.registerDefinitionProvider('django.po', {
                                 if (lineText.indexOf(firstMatchMSGID) !== -1) {
                                     targetUri = new vscode.Position(j, lineText.indexOf(firstMatchMSGID));
                                     locations.push(new vscode.Location(value[i], targetUri));
+                                    //Create output channel
+                                    log.appendLine("Found " + firstMatchMSGID + " in " + value[i].fsPath + " at line " + (j + 1));
                                     break;
                                 }
                             }
@@ -92,6 +96,7 @@ defineProvider = vscode.languages.registerDefinitionProvider('django.po', {
             }
         }
 
+
         return new vscode.Location(document.uri, new vscode.Position(0, 0));
 
     }
@@ -102,6 +107,7 @@ defineProvider = vscode.languages.registerDefinitionProvider('django.po', {
 
 export function activate(context: vscode.ExtensionContext) {
 
+    
     context.subscriptions.push(disposable); // register command
     context.subscriptions.push(hoverProvider); // register hover provider
     context.subscriptions.push(defineProvider); // register definition provider
