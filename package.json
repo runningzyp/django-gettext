@@ -2,7 +2,7 @@
     "name": "django-gettext",
     "displayName": "django.po",
     "description": "language support for django gettext",
-    "version": "0.0.8",
+    "version": "0.1.0",
     "engines": {
         "vscode": "^1.73.0"
     },
