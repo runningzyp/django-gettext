@@ -71,7 +71,7 @@
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
         "commit": "cz-customizable",
-        "release": "standard-version --release-as minor"
+        "release": "standard-version --release-as minor && vsce publish"
     },
     "devDependencies": {
         "@types/glob": "^8.0.0",
