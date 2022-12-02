@@ -19,8 +19,8 @@ disposable = vscode.commands.registerCommand('makemessages', () => {
 
 hoverProvider = vscode.languages.registerHoverProvider('django.po', {
     provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
-        let word = document.getText(document.getWordRangeAtPosition(position))
-        if (String(word).toLowerCase() == 'fuzzy') {
+        let word = document.getText(document.getWordRangeAtPosition(position));
+        if (String(word).toLowerCase() === 'fuzzy') {
             return {
                 contents: [
                     "Fuzzy translations are not used by default. \n",
@@ -37,6 +37,14 @@ defineProvider = vscode.languages.registerDefinitionProvider('django.po', {
     provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
 
         const lineText = document.lineAt(position).text; // #: foo/bar.py:123 foo/bar.py:199
+        let firstMatchMSGID: string;
+        for (let i = 0; i < 100; i++) {
+            var varText = document.lineAt(position.line + i).text;
+            if (varText.toLowerCase().startsWith('msgid')) {
+                firstMatchMSGID = varText.replaceAll('msgid', '').replaceAll('"', "").replaceAll("'", "").trim();
+                break;
+            }
+        }
         if (!lineText.startsWith('#:')) {
             return;
         }
@@ -53,19 +61,31 @@ defineProvider = vscode.languages.registerDefinitionProvider('django.po', {
             if (position.character >= fileIndexStart && position.character <= fileIndexEnd) {
                 let [filePath, lineString] = file.split(':');
                 let lineNumber = Number(lineString);
-                if (isNaN(lineNumber)) {
-                    lineNumber = 0;
-                }
-                return vscode.workspace.findFiles(filePath).then(value => {
+                return vscode.workspace.findFiles(filePath).then(async value => {
                     if (!value) {
                         return;
                     }
-                    let targetUri :vscode.Position
-                    targetUri = new vscode.Position(lineNumber+1, 0);
                     let locations: vscode.Location[] = new Array();
-                    value.forEach(uri => {
-                        locations.push(new vscode.Location(uri, targetUri));
-                    });
+                    
+                    for (let i = 0; i < value.length; i++) {
+                        let targetUri: vscode.Position;
+                        let document = await vscode.workspace.openTextDocument(value[i]);
+                        if (lineNumber) {
+                            const lineText = document.lineAt(lineNumber - 1).text;
+                            targetUri = new vscode.Position(lineNumber - 1, lineText.indexOf(firstMatchMSGID) === -1 ? 0 : lineText.indexOf(firstMatchMSGID));
+                            locations.push(new vscode.Location(value[i], targetUri));
+                        } else {
+                            for (let j = 0; i < document.lineCount; j++) {
+                                const lineText = document.lineAt(j).text;
+                                if (lineText.indexOf(firstMatchMSGID) !== -1) {
+                                    targetUri = new vscode.Position(j, lineText.indexOf(firstMatchMSGID));
+                                    locations.push(new vscode.Location(value[i], targetUri));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                     return locations;
                 });
 
